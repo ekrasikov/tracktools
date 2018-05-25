@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2">
+  <Activities>
+    <Activity Sport="Biking">
+      <Id>2018-03-25T08:42:15.000Z</Id>
+      <Lap StartTime="2018-03-25T08:42:15.000Z">
+        <TotalTimeSeconds>3279.0</TotalTimeSeconds>
+        <DistanceMeters>23629.59</DistanceMeters>
+        <MaximumSpeed>17.21500015258789</MaximumSpeed>
+        <Calories>759</Calories>
+        <AverageHeartRateBpm>
+          <Value>116</Value>
+        </AverageHeartRateBpm>
+        <Cadence>117</Cadence>
+        <Track>
+          <Trackpoint>
+            <Time>2018-03-25T08:42:15.000Z</Time>
+            <Position>
+              <LatitudeDegrees>34.83603548258543</LatitudeDegrees>
+              <LongitudeDegrees>32.483832724392414</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>598.2000122070312</AltitudeMeters>
+            <DistanceMeters>4.909999847412109</DistanceMeters>
+            <HeartRateBpm>
+              <Value>118</Value>
+            </HeartRateBpm>
+          </Trackpoint>
+          <Trackpoint>
+            <Time>2018-03-25T08:42:16.000Z</Time>
+            <Position>
+              <LatitudeDegrees>34.83602802269161</LatitudeDegrees>
+              <LongitudeDegrees>32.483778577297926</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>598.2000122070312</AltitudeMeters>
+            <DistanceMeters>9.84000015258789</DistanceMeters>
+            <HeartRateBpm>
+              <Value>118</Value>
+            </HeartRateBpm>
+          </Trackpoint>
+          <Trackpoint>
+            <Time>2018-03-25T08:42:18.000Z</Time>
+            <Position>
+              <LatitudeDegrees>34.83600815758109</LatitudeDegrees>
+              <LongitudeDegrees>32.48368302360177</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>598.2000122070312</AltitudeMeters>
+            <DistanceMeters>19.049999237060547</DistanceMeters>
+            <HeartRateBpm>
+              <Value>117</Value>
+            </HeartRateBpm>
+		  </Trackpoint>
+		</Track>
+	  </Lap>
+	</Activity>
+  </Activities>
+</TrainingCenterDatabase>

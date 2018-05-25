@@ -109,4 +109,3 @@ class FileHelper():
 
     def save(self, filename, file_format):
         pass
-

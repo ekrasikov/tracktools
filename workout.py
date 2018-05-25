@@ -89,6 +89,26 @@ class TrackPoint():
 
         return s
 
+
+class LapEncoder(json.JSONEncoder):
+    def default(self, o):
+        trackpoints_json = ""
+        if isinstance(o, Lap):
+            for t in o.trackpoints:
+                trackpoints_json += json.dumps(t, cls=TrackPointEncoder)
+                trackpoints_json += ","
+
+            json_string = '{{ "id" : {} ,'\
+                            '"stats" : {} ,'\
+                            '"trackpoints" : [ {} ]'\
+                        '}}'.format(0, o.stats, trackpoints_json[:-1])
+
+            return json_string
+            #return json.dumps(json_string, sort_keys=False, indent=4)
+        else:
+            json.JSONEncoder.default(self, o)
+
+
 class TrackPointEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, TrackPoint):

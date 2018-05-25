@@ -12,3 +12,5 @@ if __name__ == "__main__":
     print(workout1.laps[0].trackpoints[0])
 
     print(json.dumps(workout1.laps[0].trackpoints[0], cls=workout.TrackPointEncoder))
+    print("=========")
+    print(json.dumps(workout1.laps[0], cls=workout.LapEncoder))

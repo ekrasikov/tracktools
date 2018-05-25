@@ -1,11 +1,16 @@
 '''Classes definitions for workouts'''
+import json
 
 class Workout():
     '''Workout session contains laps'''
-    def __init__(self, sport):
-        # Id is 0 until workout is persistently saved and got an ID from storage_helper
-        self.id = 0
-        self.sport = sport
+    def __init__(self, user_id, date_time, sport = None):
+        # Not implemented in a prototype
+        self.user_id = 1
+        # date_time along with user_id is used as Workout ID in API and DB
+        # need to implement via datetime
+        self.date_time = 0
+        self.sport = "Unknow" if sport is None else sport
+        self.stats = {}
         self.laps = []
 
     def __str__(self):
@@ -19,10 +24,6 @@ class Workout():
     def add_lap(self, lap):
         """Add new lap to the workout"""
         self.laps.append(lap)
-
-    def set_id(self, id):
-        '''Set new id (used after workout has been saved to persistent storage with storage_helper)'''
-        self.id = id
 
 
 class Lap():
@@ -87,3 +88,10 @@ class TrackPoint():
                 pass
 
         return s
+
+class TrackPointEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, TrackPoint):
+            return o.values
+        else:
+            json.JSONEncoder.default(self, o)

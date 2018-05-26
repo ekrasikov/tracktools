@@ -3,12 +3,11 @@ import marshmallow
 
 class Workout():
     '''Workout session contains laps'''
-    def __init__(self, user_id, date_time, sport=None):
+    def __init__(self, user_id, timestamp, sport=None):
         # Not implemented in a prototype
         self.user_id = user_id
-        # date_time along with user_id is used as Workout ID in API and DB
-        # need to implement via datetime
-        self.date_time = date_time # epoch format
+        # timestamp along with user_id is used as Workout ID in API and DB
+        self.timestamp = timestamp # epoch format
         self.sport = "Unknown" if sport is None else sport
         self.stats = {}
         self.laps = []
@@ -86,34 +85,6 @@ class TrackPoint():
 
         return s
 
-# class LapEncoder(json.JSONEncoder):
-#     '''Encode Lap() to JSON'''
-#     def default(self, o):
-#         trackpoints_json = ""
-#         if isinstance(o, Lap):
-#             for t in o.trackpoints:
-#                 trackpoints_json += json.dumps(t, cls=TrackPointEncoder)
-#                 trackpoints_json += ","
-#
-#             json_string = '{{ "id" : {} ,'\
-#                             '"stats" : {} ,'\
-#                             '"trackpoints" : [ {} ]'\
-#                         '}}'.format(0, o.stats, trackpoints_json[:-1])
-#
-#             return json_string
-#             #return json.dumps(json_string, sort_keys=False, indent=4)
-#         else:
-#             json.JSONEncoder.default(self, o)
-#
-#
-# class TrackPointEncoder(json.JSONEncoder):
-#     '''Encode TrackPoint() to JSON'''
-#     def default(self, o):
-#         if isinstance(o, TrackPoint):
-#             return o.values
-#         else:
-#             json.JSONEncoder.default(self, o)
-
 
 # Marshmallow Schemas definition to serialize
 class TrackPointSchema(marshmallow.Schema):
@@ -129,9 +100,9 @@ class LapSchema(marshmallow.Schema):
 
 
 class WorkoutSchema(marshmallow.Schema):
-    '''Marshmallow schema to serialize Lap() to JSON'''
+    '''Marshmallow schema to serialize Lap() to JSON. Not used in fact'''
     user_id = marshmallow.fields.Int()
-    date_time = marshmallow.fields.Int() # epoch format
+    timestamp = marshmallow.fields.Int() # epoch format
     sport = marshmallow.fields.String()
     stats = marshmallow.fields.Dict()
     laps = marshmallow.fields.Nested(LapSchema, many=True)

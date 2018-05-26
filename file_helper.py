@@ -28,7 +28,7 @@ class FileHelper():
             activity = activities.find('{}Activity'.format(NS))
             laps = activity.findall('{}Lap'.format(NS))
 
-            my_workout = workout.Workout(1, 0, "Biking")
+            my_workout = workout.Workout(user_id=1, timestamp=1527329495, sport="Biking")
 
             for i, lap in enumerate(laps):
                 # Only the first track is processed in the prototype

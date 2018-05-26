@@ -30,14 +30,9 @@ class StorageHelper():
                 return obj
 
         try:
+            # Serialize workout
             my_item = workout.WorkoutSchema().dump(workout_to_save)
-            # my_item = {
-            #     'user_id': workout_to_save.user_id,
-            #     'timestamp': workout_to_save.timestamp,
-            #     'sport': workout_to_save.sport,
-            #     'stats': json.dumps(workout_to_save.stats),
-            #     'laps': workout.LapSchema().dump(workout_to_save.laps, many=True)
-            # }
+            # Save serialized workout to DynamoDB
             response = self.table.put_item(Item=convert_to_decimals(my_item))
             return response
         except:

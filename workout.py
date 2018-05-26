@@ -86,7 +86,7 @@ class TrackPoint():
         return s
 
 
-# Marshmallow Schemas definition to serialize
+# Marshmallow Schemas definitions for serialization
 class TrackPointSchema(marshmallow.Schema):
     '''Marshmallow schema to serialize TrackPoint() to JSON'''
     values = marshmallow.fields.Dict()
@@ -125,4 +125,3 @@ class WorkoutSchema(marshmallow.Schema):
         # Create new Workout() object from JSON data
         print("Hey, I'm make_workout")
         return Workout(**data)
-

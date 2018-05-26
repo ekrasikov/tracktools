@@ -48,6 +48,7 @@
             <HeartRateBpm>
               <Value>117</Value>
             </HeartRateBpm>
+            <Cadence>103</Cadence>
 		  </Trackpoint>
 		</Track>
 	  </Lap>

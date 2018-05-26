@@ -1,4 +1,7 @@
+'''Load tcx/gpx/kml data from file, create Workout() from it, export Workout() to various formats'''
+
 import xml.etree.ElementTree as etree
+from datetime import datetime
 import workout
 
 class FileHelper():
@@ -27,7 +30,7 @@ class FileHelper():
 
             my_workout = workout.Workout(1, 0, "Biking")
 
-            for i,lap in enumerate(laps):
+            for i, lap in enumerate(laps):
                 # Only the first track is processed in the prototype
                 track = lap.find('{}Track'.format(NS))
                 trackpoints = track.findall('{}Trackpoint'.format(NS))
@@ -36,6 +39,16 @@ class FileHelper():
                 my_lap = workout.Lap([], i)
 
                 for tp in trackpoints:
+                    # Possible values keys are:
+                    # time - epoch format
+                    # latitude
+                    # longitude
+                    # altitude
+                    # distance
+                    # heart_rate
+                    # cadence
+                    # power - to implement later
+
                     params = {}
                     time = tp.find('{}Time'.format(NS))
 
@@ -43,9 +56,10 @@ class FileHelper():
                     try:
                         # Need to add accurate processing of milliseconds
                         my_time = datetime.strptime(time.text, "%Y-%m-%dT%H:%M:%S.000Z")
-                        params["time"] = my_time
+                        epoch_time = my_time.timestamp()
+                        params["time"] = epoch_time
                     except:
-                        params["time"] = None
+                        pass
 
                     # Read and process geo coordinates
                     try:
@@ -58,27 +72,27 @@ class FileHelper():
                         try:
                             params["latitude"] = float(latitude.text)
                         except:
-                            params["latitude"] = None
+                            pass
 
                         longitude = position.find('{}LongitudeDegrees'.format(NS))
                         try:
                             params["longitude"] = float(longitude.text)
                         except:
-                            params["longitude"] = None
+                            pass
 
                     # Altitude
                     altitude = tp.find('{}AltitudeMeters'.format(NS))
                     try:
                         params["altitude"] = float(altitude.text)
                     except:
-                        params["altitude"] = None
+                        pass
 
                     # Distance
                     distance = tp.find('{}DistanceMeters'.format(NS))
                     try:
                         params["distance"] = float(distance.text)
                     except:
-                        params["distance"] = None
+                        pass
 
                     # Heart rate
                     hr = tp.find('{}HeartRateBpm'.format(NS))
@@ -86,14 +100,14 @@ class FileHelper():
                     try:
                         params["heart_rate"] = int(hr_value.text)
                     except:
-                        params["heart_rate"] = None
+                        pass
 
                     # Cadence
                     cadence = tp.find('{}Cadence'.format(NS))
                     try:
                         params["cadence"] = int(cadence.text)
                     except:
-                        params["cadence"] = None
+                        pass
 
                     # Add trackpoint to a lap
                     my_trackpoint = workout.TrackPoint(params)
@@ -108,4 +122,5 @@ class FileHelper():
             return None
 
     def save(self, filename, file_format):
+        '''Export Workout() to gpx/tcx/kml/kmz'''
         pass

@@ -1,16 +1,20 @@
-import json
+import marshmallow
 import file_helper
 import workout
 
-FILENAME = "data_samples/simple.tcx"
+INPUT_FILENAME = "data_samples/activity2.tcx"
+OUTPUT_FILENAME = "outputs/activity2.json"
 
 if __name__ == "__main__":
     my_helper = file_helper.FileHelper()
-    workout1 = my_helper.load(FILENAME, "tcx")
-    #print(workout1)
+    my_workout = my_helper.load(INPUT_FILENAME, "tcx")
 
-    print(workout1.laps[0].trackpoints[0])
+    print(my_workout)
 
-    print(json.dumps(workout1.laps[0].trackpoints[0], cls=workout.TrackPointEncoder))
-    print("=========")
-    print(json.dumps(workout1.laps[0], cls=workout.LapEncoder))
+    result = workout.WorkoutSchema().dump(my_workout)
+
+    print(result)
+
+    with open(OUTPUT_FILENAME, "w") as f:
+        f.write(str(result))
+

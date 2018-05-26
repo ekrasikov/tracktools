@@ -1,6 +1,5 @@
 from decimal import *
 import boto3
-import json
 import workout
 
 class StorageHelper():
@@ -18,9 +17,7 @@ class StorageHelper():
         def convert_to_decimals(obj):
             '''convert all values to decimals to use boto3'''
             if isinstance(obj, list):
-                for i in obj:
-                    i = convert_to_decimals(i)
-                return obj
+                return [convert_to_decimals(i) for i in obj]
             elif isinstance(obj, dict):
                 for k in obj:
                     obj[k] = convert_to_decimals(obj[k])
@@ -33,33 +30,32 @@ class StorageHelper():
                 return obj
 
         try:
-            my_item = {
-                'user_id': workout_to_save.user_id,
-                'timestamp': workout_to_save.timestamp,
-                'sport': workout_to_save.sport,
-                'stats': json.dumps(workout_to_save.stats),
-                'laps': workout.LapSchema().dump(workout_to_save.laps, many=True)
-            }
+            my_item = workout.WorkoutSchema().dump(workout_to_save)
+            # my_item = {
+            #     'user_id': workout_to_save.user_id,
+            #     'timestamp': workout_to_save.timestamp,
+            #     'sport': workout_to_save.sport,
+            #     'stats': json.dumps(workout_to_save.stats),
+            #     'laps': workout.LapSchema().dump(workout_to_save.laps, many=True)
+            # }
             response = self.table.put_item(Item=convert_to_decimals(my_item))
             return response
         except:
             print("Cannot save workout to DynamoDB")
             return None
 
-    def load_workout(self, id):
+    def load_workout(self, user_id, timestamp):
         '''Load workout from storage_endpoint, return workout'''
-
         def convert_from_decimals(obj):
             '''convert all values from decimals to int and float to use boto3'''
             if isinstance(obj, list):
-                for i in xrange(len(obj)):
-                    obj[i] = convert_from_decimals(obj[i])
-                return obj
+                for i in obj:
+                    return [convert_from_decimals(i) for i in obj]
             elif isinstance(obj, dict):
                 for k in obj:
                     obj[k] = convert_from_decimals(obj[k])
                 return obj
-            elif isinstance(obj, decimal.Decimal):
+            elif isinstance(obj, Decimal):
                 if obj % 1 == 0:
                     return int(obj)
                 else:
@@ -67,4 +63,17 @@ class StorageHelper():
             else:
                 return obj
 
-        pass
+        try:
+            response = self.table.get_item(
+                Key={
+                    'user_id': user_id,
+                    'timestamp': timestamp
+                }
+            )
+        except:
+            print("Cannot load workout from DynamoDB")
+            return None
+
+        print("Response is", response)
+
+        return convert_from_decimals(response)["Item"]

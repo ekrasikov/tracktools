@@ -4,6 +4,8 @@ import xml.etree.ElementTree as etree
 from datetime import datetime
 import workout
 
+TS = 1527329610
+
 class FileHelper():
     '''Helper class to load (import) and save (export) workouts'''
     def __init__(self):
@@ -28,7 +30,8 @@ class FileHelper():
             activity = activities.find('{}Activity'.format(NS))
             laps = activity.findall('{}Lap'.format(NS))
 
-            my_workout = workout.Workout(user_id=1, timestamp=1527329495, sport="Biking")
+            # Need to get timestamp from loaded file
+            my_workout = workout.Workout(user_id=1, timestamp=TS, sport="Biking")
 
             for i, lap in enumerate(laps):
                 # Only the first track is processed in the prototype
@@ -36,7 +39,7 @@ class FileHelper():
                 trackpoints = track.findall('{}Trackpoint'.format(NS))
 
                 # No stats are processed at this stage in the prototype
-                my_lap = workout.Lap([], i)
+                my_lap = workout.Lap({}, i)
 
                 for tp in trackpoints:
                     # Possible values keys are:

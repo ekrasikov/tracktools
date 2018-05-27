@@ -1,8 +1,8 @@
-'''Classes definitions for workouts'''
+"""Classes definitions for workouts"""
 import marshmallow
 
 class Workout():
-    '''Workout session contains laps'''
+    """Workout session contains laps"""
     def __init__(self, user_id, timestamp, sport=None, stats=None, laps=None):
         # Not implemented in a prototype
         self.user_id = user_id
@@ -26,7 +26,7 @@ class Workout():
 
 
 class Lap():
-    '''Lap contains some data (averages and maximums) and a list of trackpoints'''
+    """Lap contains some data (averages and maximums) and a list of trackpoints"""
     def __init__(self, stats, lap_id, trackpoints=None):
         # Id must be unique only within a workout
         self.lap_id = lap_id
@@ -47,7 +47,7 @@ class Lap():
 
 
 class TrackPoint():
-    '''Trackpoint contains data values: coordinates, speed, heart rate, etc.'''
+    """Trackpoint contains data values: coordinates, speed, heart rate, etc."""
     def __init__(self, values):
         self.values = values
         """
@@ -88,7 +88,7 @@ class TrackPoint():
 
 # Marshmallow Schemas definitions for serialization
 class TrackPointSchema(marshmallow.Schema):
-    '''Marshmallow schema to serialize TrackPoint() to JSON'''
+    """Marshmallow schema to serialize TrackPoint() to JSON"""
     values = marshmallow.fields.Dict()
 
     @marshmallow.post_load
@@ -99,7 +99,7 @@ class TrackPointSchema(marshmallow.Schema):
 
 
 class LapSchema(marshmallow.Schema):
-    '''Marshmallow schema to serialize Lap() to JSON'''
+    """Marshmallow schema to serialize Lap() to JSON"""
     lap_id = marshmallow.fields.Int()
     stats = marshmallow.fields.Dict()
     trackpoints = marshmallow.fields.Nested(TrackPointSchema, many=True)
@@ -113,7 +113,7 @@ class LapSchema(marshmallow.Schema):
 
 
 class WorkoutSchema(marshmallow.Schema):
-    '''Marshmallow schema to serialize Lap() to JSON.'''
+    """Marshmallow schema to serialize Lap() to JSON."""
     user_id = marshmallow.fields.Int()
     timestamp = marshmallow.fields.Int() # epoch format
     sport = marshmallow.fields.String()

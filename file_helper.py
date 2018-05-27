@@ -1,4 +1,4 @@
-'''Load tcx/gpx/kml data from file, create Workout() from it, export Workout() to various formats'''
+"""Load tcx/gpx/kml data from file, create Workout() from it, export Workout() to various formats"""
 
 import xml.etree.ElementTree as etree
 from datetime import datetime
@@ -7,12 +7,12 @@ import workout
 TS = 1527329610
 
 class FileHelper():
-    '''Helper class to load (import) and save (export) workouts'''
+    """Helper class to load (import) and save (export) workouts"""
     def __init__(self):
         pass
 
     def load(self, srcfile, file_format):
-        """Load workout from tcx/gpx file to Workout() object format"""
+        """Load workout from tcx/gpx file to Workout() object format."""
         # Only tcx is implemented in the prototype
         if file_format == "tcx":
             # TCX XML namespace
@@ -125,5 +125,5 @@ class FileHelper():
             return None
 
     def save(self, filename, file_format):
-        '''Export Workout() to gpx/tcx/kml/kmz'''
+        """Export Workout() to gpx/tcx/kml/kmz."""
         pass

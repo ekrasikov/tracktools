@@ -2,11 +2,23 @@
 import marshmallow
 
 class Workout():
-    """Workout session contains laps"""
+    """Represents a workout session recorded by a GPS device.
+
+    Workout contains some data (timestamp, sport, averages, etc.) and a list of laps.
+
+    Public attributes:
+    - user_id: Id of the workout owner (integer).
+    - timestamp: Creation time in epoch format (integer).
+    - sport: Type of sport - Biking, Running, etc. (string)
+    - stats: Workout statistics, e.g. average heart rate or speed
+        (dictionary; keys and value types may vary).
+    - laps: Laps (list of Lap() objects).
+
+    (user_id, timestamp) uniquely identifies workout.
+    """
     def __init__(self, user_id, timestamp, sport=None, stats=None, laps=None):
-        # Not implemented in a prototype
         self.user_id = user_id
-        # timestamp along with user_id is used as Workout ID in API and DB
+        # (timestamp, user_id) is used as Workout ID in API and DB
         self.timestamp = timestamp # epoch format
         self.sport = "Unknown" if sport is None else sport
         self.stats = {} if stats is None else stats
@@ -21,16 +33,24 @@ class Workout():
         return s
 
     def add_lap(self, lap):
-        """Add new lap to the workout"""
+        """Add new lap to the workout."""
         self.laps.append(lap)
 
 
 class Lap():
-    """Lap contains some data (averages and maximums) and a list of trackpoints"""
+    """Represents a lap in a workout.
+
+    Lap contains some data (averages and maximums) and a list of trackpoints.
+
+    Public attributes:
+    - lap_id: Lap id, must be unique only within a workout
+        (integer, typically starts with 0 and increments).
+    - stats: Workout statistics, typically averages and maximums
+        (dictionary; keys and value types may vary).
+    - trackpoints: Trackpoints (list of TrackPoint() objects).
+    """
     def __init__(self, stats, lap_id, trackpoints=None):
-        # Id must be unique only within a workout
         self.lap_id = lap_id
-        # Dictionary
         self.stats = stats
         self.trackpoints = [] if trackpoints is None else trackpoints
 
@@ -47,20 +67,25 @@ class Lap():
 
 
 class TrackPoint():
-    """Trackpoint contains data values: coordinates, speed, heart rate, etc."""
+    """Represents single data point recorded by a GPS device.
+
+    Contains metrics (geo coordinates, speed, heart rate, etc.) for a certain time point.
+
+    Public attribute:
+    - values: Dictionary of data values. Keys and value types are not specified, any ones
+        should be stored correctly. However, only the following ones are processed at the moment:
+        - "time": integer. Timestamp in epoch format.
+        - "latitude": float
+        - "longitude": float
+        - "altitude": float
+        - "distance": float
+        - "heart_rate": integer
+        - "cadence": integer
+        - "power": integer, will be implemented later
+
+    """
     def __init__(self, values):
         self.values = values
-        """
-        Possible values keys are:
-        time - epoch format
-        latitude
-        longitude
-        altitude
-        distance
-        heart_rate
-        cadence
-        power - to implement later
-        """
 
     def __str__(self):
         s = "Trackpoint\n"
@@ -77,6 +102,7 @@ class TrackPoint():
         }
 
         for key, value in self.values.items():
+            # What if key is not in format_padding? Add exception or check
             #try:
             format_string = "{}" + ": " + format_padding[key] + "\n"
             s += format_string.format(key.capitalize(), value)

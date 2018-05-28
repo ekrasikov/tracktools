@@ -1,28 +1,29 @@
-"""Load tcx/gpx/kml data from file, create Workout() from it, export Workout() to various formats"""
+"""Load tcx/gpx/kml data from file, create Workout() from it, export Workout() to various formats."""
 
 import xml.etree.ElementTree as etree
 from datetime import datetime
 import workout
 
-TS = 1527329610
+TS = 1527329919
 
 class FileHelper():
     """Helper class to load (import) and save (export) workouts"""
     def __init__(self):
         pass
 
-    def load(self, srcfile, file_format):
+    def load(self, src_string):
         """Load workout from tcx/gpx file to Workout() object format."""
+        # Some logic to define format based on contents will be implemented later
+        file_format = "tcx"
         # Only tcx is implemented in the prototype
         if file_format == "tcx":
             # TCX XML namespace
             NS = "{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}"
             # Load tcx
             try:
-                tree = etree.parse(srcfile)
-                root = tree.getroot()
+                root = etree.fromstring(src_string)
             except:
-                print("ERROR - Can't load XML file: {}".format(srcfile))
+                print("Cannot load XML")
                 return None
 
             # Only the first of activities is processed in the prototype

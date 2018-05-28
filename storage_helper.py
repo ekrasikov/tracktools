@@ -39,8 +39,10 @@ class StorageHelper():
             print("Cannot save workout to DynamoDB")
             return None
 
-    def load_workout(self, user_id, timestamp):
-        """Load workout from storage_endpoint, return workout."""
+    def load_workout_json(self, user_id, timestamp):
+        """Load workout from storage_endpoint, return it serialized to JSON.
+
+        Can be used for example for APIs to not to deserialize and serialize again"""
         def convert_from_decimals(obj):
             """Convert all values from decimals to int and float to use boto3."""
             if isinstance(obj, list):
@@ -69,6 +71,15 @@ class StorageHelper():
             print("Cannot load workout from DynamoDB")
             return None
 
-        print("Response is", response)
+        print("Response from DB is", response)
+        result = convert_from_decimals(response)["Item"]
+        print("Loaded workout JSON is", result)
 
-        return convert_from_decimals(response)["Item"]
+        return result
+
+    def load_workout(self, user_id, timestamp):
+        """Load workout from storage_endpoint, return Workout() object."""
+        my_workout_json = self.load_workout_json(user_id, timestamp)
+        schema = workout.WorkoutSchema()
+        my_workout = schema.load(my_workout_json)
+        return my_workout

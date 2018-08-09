@@ -7,8 +7,6 @@ GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts
     List workouts for a user
 GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts/[workout_timestamp]
     Get a workout
-GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts/[workout_timestamp]/stats
-    Get only workout stats
 POST http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts
     Store a new workout
 """
@@ -29,7 +27,6 @@ app = Flask(__name__, static_url_path='/static')
 
 @app.route(ROOT_URL + 'workouts/<int:workout_timestamp>', methods=['GET'])
 def get_workout(workout_timestamp):
-    print("I'm get_workout")
     try:
         print("Connecting to DB")
         my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
@@ -40,6 +37,22 @@ def get_workout(workout_timestamp):
         abort(500)
     else:
         return jsonify(my_workout_dict)
+
+@app.route(ROOT_URL + 'workouts', methods=['GET'])
+def get_workouts():
+    """Return list of workouts ids"""
+    try:
+        print("Connecting to DB")
+        my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
+        print("Loading workout from DB")
+        my_workouts = my_storage_helper.get_workouts_list(user_id=1)
+    except:
+        print("Cannot load list of workouts from DB")
+        abort(500)
+    else:
+        return jsonify(my_workouts)
+
+
 
 @app.route(ROOT_URL + 'workouts', methods=['POST'])
 def post_workout():

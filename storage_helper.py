@@ -2,6 +2,7 @@ from decimal import *
 import boto3
 import workout
 import sys
+from boto3.dynamodb.conditions import Key
 
 class StorageHelper():
     """Helper Class to save workout in persistent storage"""
@@ -84,3 +85,23 @@ class StorageHelper():
         schema = workout.WorkoutSchema()
         my_workout, error = schema.load(my_workout_json)
         return my_workout
+
+    def get_workouts_list(self, user_id):
+        """Get workouts list fro a user user_id, return list of ids"""
+        try:
+            response = self.table.query(
+                KeyConditionExpression=Key('user_id').eq(user_id)
+            )
+        except:
+            print("Cannot query workouts' ids from DynamoDB", sys.exc_info())
+            return None
+
+        items = response['Items']
+
+        result = []
+
+        for i in items:
+            print(int(i['timestamp']))
+            result.append(int(i['timestamp']))
+
+        return result

@@ -3,6 +3,8 @@
 Root URL: http://[hostname/]/tracktools/v1.0/
 
 Methods:
+GET http://[hostname/]/tracktools/v1.0
+    Return 200 (for health checks)
 GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts
     List workouts for a user
 GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts/[workout_timestamp]
@@ -24,6 +26,10 @@ dynamodb_table = os.environ.get('TRACKTOOLS_DYNAMODB_TABLE')
 ROOT_URL = "/tracktools/v1.0/users/1/"
 
 app = Flask(__name__, static_url_path='/static')
+
+@app.route("/tracktools/v1.0", methods=['GET'])
+def return_ok():
+    return("OK")
 
 @app.route(ROOT_URL + 'workouts/<int:workout_timestamp>', methods=['GET'])
 def get_workout(workout_timestamp):

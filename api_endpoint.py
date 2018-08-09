@@ -4,7 +4,7 @@ Root URL: http://[hostname/]/tracktools/v1.0/
 
 Methods:
 GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts
-    List workout for a user
+    List workouts for a user
 GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts/[workout_timestamp]
     Get a workout
 GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts/[workout_timestamp]/stats
@@ -17,6 +17,11 @@ from flask import Flask, abort, jsonify, request, flash
 import workout
 import storage_helper
 import file_helper
+import os
+
+dynamodb_region = os.environ.get('TRACKTOOLS_DYNAMODB_REGION')
+dynamodb_url = os.environ.get('TRACKTOOLS_DYNAMODB_URL')
+dynamodb_table = os.environ.get('TRACKTOOLS_DYNAMODB_TABLE')
 
 ROOT_URL = "/tracktools/v1.0/users/1/"
 
@@ -27,8 +32,7 @@ def get_workout(workout_timestamp):
     print("I'm get_workout")
     try:
         print("Connecting to DB")
-        my_storage_helper = storage_helper.StorageHelper('eu-central-1', "https://dynamodb.eu-central-1.amazonaws.com",
-                                                     "WorkoutsTest")
+        my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
         print("Loading workout from DB")
         my_workout_dict = my_storage_helper.load_workout_json(user_id=1, timestamp=workout_timestamp)
     except:
@@ -67,8 +71,7 @@ def post_workout():
         abort(500)
 
     try:
-        my_storage_helper = storage_helper.StorageHelper('eu-central-1',
-                                                         "https://dynamodb.eu-central-1.amazonaws.com", "WorkoutsTest")
+        my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
         my_storage_helper.save_workout(my_workout)
     except:
         print("Cannot save to DB")

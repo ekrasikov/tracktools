@@ -1,9 +1,14 @@
 import file_helper
 import storage_helper
 import workout
+import os
 
 INPUT_FILENAME = "data_samples/activity2.tcx"
 OUTPUT_FILENAME = "outputs/activity2.json"
+
+dynamodb_region = os.environ.get('TRACKTOOLS_DYNAMODB_REGION')
+dynamodb_url = os.environ.get('TRACKTOOLS_DYNAMODB_URL')
+dynamodb_table = os.environ.get('TRACKTOOLS_DYNAMODB_TABLE')
 
 if __name__ == "__main__":
     my_file_helper = file_helper.FileHelper()
@@ -12,14 +17,14 @@ if __name__ == "__main__":
         s = f.read()
         my_workout = my_file_helper.load(s)
 
-    print(my_workout)
+    # print(my_workout)
 
     # result = workout.LapSchema().dump(my_workout.laps, many=True)
     #
     # with open(OUTPUT_FILENAME, "w") as f:
     #     f.write(str(result))
     #
-    # my_storage_helper = storage_helper.StorageHelper('eu-central-1', "https://dynamodb.eu-central-1.amazonaws.com", "WorkoutsTest")
+    my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
     # result = my_storage_helper.save_workout(my_workout)
     # print(result)
     #

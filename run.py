@@ -25,8 +25,8 @@ if __name__ == "__main__":
     #     f.write(str(result))
     #
     my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
-    # result = my_storage_helper.save_workout(my_workout)
-    # print(result)
+    result = my_storage_helper.save_workout(my_workout)
+    print(result)
     #
     # result = my_storage_helper.load_workout_json(user_id=1, timestamp=file_helper.TS)
     #

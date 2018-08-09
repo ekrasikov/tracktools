@@ -1,6 +1,7 @@
 from decimal import *
 import boto3
 import workout
+import sys
 
 class StorageHelper():
     """Helper Class to save workout in persistent storage"""
@@ -31,12 +32,12 @@ class StorageHelper():
 
         try:
             # Serialize workout
-            my_item = workout.WorkoutSchema().dump(workout_to_save)
+            my_item, errors = workout.WorkoutSchema().dump(workout_to_save)
             # Save serialized workout to DynamoDB
             response = self.table.put_item(Item=convert_to_decimals(my_item))
             return response
         except:
-            print("Cannot save workout to DynamoDB")
+            print("Cannot save workout to DynamoDB", sys.exc_info())
             return None
 
     def load_workout_json(self, user_id, timestamp):
@@ -81,5 +82,5 @@ class StorageHelper():
         """Load workout from storage_endpoint, return Workout() object."""
         my_workout_json = self.load_workout_json(user_id, timestamp)
         schema = workout.WorkoutSchema()
-        my_workout = schema.load(my_workout_json)
+        my_workout, error = schema.load(my_workout_json)
         return my_workout

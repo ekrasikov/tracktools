@@ -73,9 +73,9 @@ class StorageHelper():
             print("Cannot load workout from DynamoDB")
             return None
 
-        print("Response from DB is", response)
+#        print("Response from DB is", response)
         result = convert_from_decimals(response)["Item"]
-        print("Loaded workout JSON is", result)
+#        print("Loaded workout JSON is", result)
 
         return result
 
@@ -101,7 +101,7 @@ class StorageHelper():
         result = []
 
         for i in items:
-            print(int(i['timestamp']))
+#            print(int(i['timestamp']))
             result.append(int(i['timestamp']))
 
         return result

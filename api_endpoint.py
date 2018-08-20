@@ -42,7 +42,7 @@ def get_workout(workout_timestamp):
         print("Cannot load workout from DB.")
         abort(500)
     else:
-        return jsonify(my_workout_dict)
+        return json.dumps(my_workout_dict)
 
 @app.route(ROOT_URL + 'workouts', methods=['GET'])
 def get_workouts():

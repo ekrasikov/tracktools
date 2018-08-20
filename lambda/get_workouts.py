@@ -1,18 +1,22 @@
 import logging
 import storage_helper
 import os
+import json
 
 dynamodb_region = os.environ.get('TRACKTOOLS_DYNAMODB_REGION')
 dynamodb_url = os.environ.get('TRACKTOOLS_DYNAMODB_URL')
 dynamodb_table = os.environ.get('TRACKTOOLS_DYNAMODB_TABLE')
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 def get_workouts_handler(event, context):
     '''List workouts for a user
     GET http://[hostname/]/tracktools/v1.0/users/[user_id]/workouts
     '''
+    logger.info("Got dynamoDB parameters from environment variables:")
+    logger.info("region: {}, url: {}, table: {}".format(dynamodb_region, dynamodb_url, dynamodb_table))
+
     try:
         logger.info("Connecting to DB")
         my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
@@ -27,5 +31,5 @@ def get_workouts_handler(event, context):
         return {
             'statusCode': 200,
             'headers': {'Content-Type': 'application/json'},
-            'body': jsonify(my_workouts)
+            'body': json.dumps(my_workouts)
         }

@@ -25,7 +25,7 @@ def get_workouts_handler(event, context):
         return {
             'statusCode': 400,
             'headers': {'Content-Type': 'application/json'},
-            'body': 'Malformed user_id in URL - not integer'
+            'body': '{"message": "Malformed user_id in URL - not integer"}'
         }
 
     logger.info("user_id got from path parameters is {}, it's type is {}".format(user_id, type(user_id)))

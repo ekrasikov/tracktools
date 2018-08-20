@@ -16,10 +16,10 @@ def get_workouts_handler(event, context):
     try:
         logger.info("Connecting to DB")
         my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
-        logger.info("Loading workout from DB")
-        my_workout_dict = my_storage_helper.load_workout_json(user_id=1, timestamp=workout_timestamp)
+        logger.info("Loading workouts list from DB")
+        my_workouts = my_storage_helper.get_workouts_list(user_id=1)
     except:
-        logger.error("Cannot load workout from DB.")
+        logger.error("Cannot load workouts list from DB.")
         return {
             'statusCode': 500
         }
@@ -27,5 +27,5 @@ def get_workouts_handler(event, context):
         return {
             'statusCode': 200,
             'headers': {'Content-Type': 'application/json'},
-            'body': jsonify(my_workout_dict)
+            'body': jsonify(my_workouts)
         }

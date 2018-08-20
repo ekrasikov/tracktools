@@ -8,7 +8,8 @@ dynamodb_url = os.environ.get('TRACKTOOLS_DYNAMODB_URL')
 dynamodb_table = os.environ.get('TRACKTOOLS_DYNAMODB_TABLE')
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
+
 
 def get_workouts_handler(event, context):
     '''List workouts for a user
@@ -18,10 +19,22 @@ def get_workouts_handler(event, context):
     logger.info("region: {}, url: {}, table: {}".format(dynamodb_region, dynamodb_url, dynamodb_table))
 
     try:
+        user_id = int(event['pathParameters']['user_id'])
+    except:
+        logger.error("Malformed user_id in URL")
+        return {
+            'statusCode': 400,
+            'headers': {'Content-Type': 'application/json'},
+            'body': 'Malformed user_id in URL - not integer'
+        }
+
+    logger.info("user_id got from path parameters is {}, it's type is {}".format(user_id, type(user_id)))
+
+    try:
         logger.info("Connecting to DB")
         my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
         logger.info("Loading workouts list from DB")
-        my_workouts = my_storage_helper.get_workouts_list(user_id=1)
+        my_workouts = my_storage_helper.get_workouts_list(user_id=user_id)
     except:
         logger.error("Cannot load workouts list from DB.")
         return {

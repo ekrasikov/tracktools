@@ -27,6 +27,9 @@ ROOT_URL = "/tracktools/v1.0/users/1/"
 
 app = Flask(__name__, static_url_path='/static')
 
+print("Connecting to DB")
+my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
+
 @app.route("/tracktools/v1.0", methods=['GET'])
 def return_ok():
     return("OK")
@@ -34,8 +37,6 @@ def return_ok():
 @app.route(ROOT_URL + 'workouts/<int:workout_timestamp>', methods=['GET'])
 def get_workout(workout_timestamp):
     try:
-        print("Connecting to DB")
-        my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
         print("Loading workout from DB")
         my_workout_dict = my_storage_helper.load_workout_json(user_id=1, timestamp=workout_timestamp)
     except:
@@ -48,8 +49,6 @@ def get_workout(workout_timestamp):
 def get_workouts():
     """Return list of workouts ids"""
     try:
-        print("Connecting to DB")
-        my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
         print("Loading workout from DB")
         my_workouts = my_storage_helper.get_workouts_list(user_id=1)
     except:
@@ -90,7 +89,7 @@ def post_workout():
         abort(500)
 
     try:
-        my_storage_helper = storage_helper.StorageHelper(dynamodb_region, dynamodb_url, dynamodb_table)
+        print("Saving workout to DB")
         my_storage_helper.save_workout(my_workout)
     except:
         print("Cannot save to DB")

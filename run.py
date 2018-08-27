@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     with open(INPUT_FILENAME, "r") as f:
         s = f.read()
-        my_workout = my_file_helper.load(s)
+        my_workout = my_file_helper.load(s, user_id=1)
 
     # print(my_workout)
 

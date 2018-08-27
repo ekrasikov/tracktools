@@ -81,7 +81,7 @@ def post_workout():
 
     try:
         my_file_helper = file_helper.FileHelper()
-        my_workout = my_file_helper.load(read_data)
+        my_workout = my_file_helper.load(read_data, user_id=1)
         print("my_workout type is: ", type(my_workout))
         print(my_workout)
     except:
@@ -90,17 +90,20 @@ def post_workout():
 
     try:
         print("Saving workout to DB")
-        my_storage_helper.save_workout(my_workout)
+        id = my_storage_helper.save_workout(my_workout)
     except:
         print("Cannot save to DB")
         abort(500)
 
-    response = {
-        'timestamp': my_workout.timestamp,
-        'status': 'saved'
-    }
+    if not id:
+        abort(500)
+    else:
+        response = {
+            'timestamp': my_workout.timestamp,
+            'status': 'saved'
+        }
 
-    return jsonify(response)
+        return jsonify(response)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True, port=8080)

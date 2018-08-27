@@ -8,7 +8,8 @@ class Workout():
 
     Public attributes:
     - user_id: Id of the workout owner (integer).
-    - timestamp: Creation time in epoch format (integer).
+    - workout_id: Internal ID, generated after save to DB (integer).
+    - timestamp: Creation time in epoch format (integer) - read from source file.
     - sport: Type of sport - Biking, Running, etc. (string)
     - stats: Workout statistics, e.g. average heart rate or speed
         (dictionary; keys and value types may vary).
@@ -19,7 +20,9 @@ class Workout():
     def __init__(self, user_id, timestamp, sport=None, stats=None, laps=None):
         self.user_id = user_id
         # (timestamp, user_id) is used as Workout ID in API and DB
-        self.timestamp = timestamp # epoch format
+        # Workout id will be assigned later after save to DB
+        self.workout_id = 0
+        self.timestamp = timestamp  # epoch format
         self.sport = "Unknown" if sport is None else sport
         self.stats = {} if stats is None else stats
         self.laps = [] if laps is None else laps
@@ -141,6 +144,7 @@ class LapSchema(marshmallow.Schema):
 class WorkoutSchema(marshmallow.Schema):
     """Marshmallow schema to serialize Lap() to JSON."""
     user_id = marshmallow.fields.Int()
+    workout_id = marshmallow.fields.Int()
     timestamp = marshmallow.fields.Int() # epoch format
     sport = marshmallow.fields.String()
     stats = marshmallow.fields.Dict()

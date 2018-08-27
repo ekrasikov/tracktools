@@ -4,14 +4,17 @@ import xml.etree.ElementTree as etree
 from datetime import datetime
 import workout
 
-TS = 1527329919
+def convert_time_to_epoch(mytime):
+    p = '%Y-%m-%dT%H:%M:%S.%fZ'
+    epoch = datetime(1970, 1, 1)
+    return int((datetime.strptime(mytime, p) - epoch).total_seconds())
 
 class FileHelper():
     """Helper class to load (import) and save (export) workouts"""
     def __init__(self):
         pass
 
-    def load(self, src_string):
+    def load(self, src_string, user_id):
         """Load workout from tcx/gpx file to Workout() object format."""
         # Some logic to define format based on contents will be implemented later
         file_format = "tcx"
@@ -29,10 +32,17 @@ class FileHelper():
             # Only the first of activities is processed in the prototype
             activities = root.find("{}Activities".format(NS))
             activity = activities.find('{}Activity'.format(NS))
+            id = activity.find('{}Id'.format(NS))
+            print("Id.text is: {}".format(id.text))
+            timestamp = convert_time_to_epoch(id.text)
+            print("Timestamp is: {}".format(timestamp))
             laps = activity.findall('{}Lap'.format(NS))
 
-            # Need to get timestamp from loaded file
-            my_workout = workout.Workout(user_id=1, timestamp=TS, sport="Biking")
+            # Get temporarily timestamp
+            # timestamp = int(datetime.now().timestamp())
+            # print("Timestamp is: {}".format(timestamp))
+
+            my_workout = workout.Workout(user_id=user_id, timestamp=timestamp, sport="Biking")
 
             for i, lap in enumerate(laps):
                 # Only the first track is processed in the prototype
